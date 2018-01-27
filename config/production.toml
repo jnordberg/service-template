@@ -1,0 +1,4 @@
+num_workers = 0
+port = 8080
+proxy = true
+log_level = 'info'
