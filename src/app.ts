@@ -17,7 +17,7 @@ const router = new Router()
 
 app.proxy = parseBool(config.get('proxy'))
 app.on('error', (error) => {
-    logger.error(error, 'Application error')
+    logger.error(error, 'application error')
 })
 
 async function healthcheck(ctx: Koa.Context) {
@@ -44,7 +44,9 @@ async function main() {
     if (numWorkers === 0) {
         numWorkers = os.cpus().length
     }
-    if (cluster.isMaster && numWorkers > 1) {
+    const isMaster = cluster.isMaster && numWorkers > 1
+
+    if (isMaster) {
         logger.info('spawning %d workers', numWorkers)
         for (let i = 0; i < numWorkers; i++) {
             cluster.fork()
@@ -56,14 +58,16 @@ async function main() {
     }
 
     const exit = async () => {
-        await close()
+        if (!isMaster) {
+            await close()
+        }
         return 0
     }
 
     process.on('SIGTERM', () => {
         logger.info('got SIGTERM, exiting...')
         exit().then((code) => {
-            process.exitCode = code
+            process.exit(code)
         }).catch((error) => {
             logger.fatal(error, 'unable to exit gracefully')
             setTimeout(() => process.exit(1), 1000)

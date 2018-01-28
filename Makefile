@@ -24,7 +24,7 @@ coverage: node_modules reports
 
 .PHONY: devserver
 devserver: node_modules
-	@onchange -i 'src/**/*.ts' 'config/*' -- ts-node src/server.ts | bunyan -o short
+	@onchange -i 'src/**/*.ts' 'config/*' -- ts-node src/app.ts | bunyan -o short
 
 .PHONY: test
 test: node_modules
