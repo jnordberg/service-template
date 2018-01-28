@@ -10,10 +10,9 @@ import * as util from 'util'
 import {logger} from './logger'
 import {parseBool} from './utils'
 
-export const version = require('./version')
 export const app = new Koa()
-
-const router = new Router()
+export const router = new Router()
+export const version = require('./version')
 
 app.proxy = parseBool(config.get('proxy'))
 app.on('error', (error) => {
@@ -26,19 +25,19 @@ async function healthcheck(ctx: Koa.Context) {
     ctx.body = {ok, version, date}
 }
 
-router.get('/.well-known/healthcheck.json', healthcheck)
 router.get('/', healthcheck)
+router.get('/.well-known/healthcheck.json', healthcheck)
 
 app.use(router.routes())
 
 async function main() {
     if (cluster.isMaster) {
-        logger.info({version}, 'starting server')
+        logger.info({version}, 'starting service')
     }
 
     const server = http.createServer(app.callback())
-    const listen = util.promisify(server.listen.bind(server))
-    const close = util.promisify(server.close.bind(server))
+    const listen = util.promisify(server.listen).bind(server)
+    const close = util.promisify(server.close).bind(server)
 
     let numWorkers = Number.parseInt(config.get('num_workers'))
     if (numWorkers === 0) {
