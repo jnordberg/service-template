@@ -1,4 +1,4 @@
-FROM node:9-alpine
+FROM node:9-alpine as build-stage
 
 WORKDIR /app
 
@@ -24,9 +24,9 @@ RUN yarn install --non-interactive --frozen-lockfile --production
 # copy built application to runtime image
 FROM node:9-alpine
 WORKDIR /app
-COPY --from=0 /app/config config
-COPY --from=0 /app/lib lib
-COPY --from=0 /app/node_modules node_modules
+COPY --from=build-stage /app/config config
+COPY --from=build-stage /app/lib lib
+COPY --from=build-stage /app/node_modules node_modules
 
 # run in production mode on port 8080
 EXPOSE 8080

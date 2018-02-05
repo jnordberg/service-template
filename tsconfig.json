@@ -3,9 +3,8 @@
     "lib": ["esnext"],
     "module": "commonjs",
     "moduleResolution": "node",
-    "noImplicitThis": true,
     "outDir": "lib",
-    "strictNullChecks": true,
+    "strict": true,
     "target": "esnext"
   },
   "include": [
