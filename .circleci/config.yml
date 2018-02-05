@@ -1,5 +1,12 @@
 version: 2
 jobs:
+  build:
+    docker:
+      - image: docker:17
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run: docker build .
   node8:
     docker:
       - image: node:8-alpine
@@ -46,5 +53,6 @@ workflows:
   version: 2
   build:
     jobs:
+      - build
       - node8
       - node9
