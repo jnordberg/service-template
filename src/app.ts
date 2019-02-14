@@ -39,7 +39,7 @@ async function main() {
     const listen = util.promisify(server.listen).bind(server)
     const close = util.promisify(server.close).bind(server)
 
-    let numWorkers = Number.parseInt(config.get('num_workers'))
+    let numWorkers = Number.parseInt(config.get('num_workers'), 10)
     if (numWorkers === 0) {
         numWorkers = os.cpus().length
     }

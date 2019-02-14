@@ -32,7 +32,7 @@ test: node_modules
 
 .PHONY: ci-test
 ci-test: node_modules reports
-	nsp check
+	yarn audit
 	tslint -p tsconfig.json -c tslint.json
 	nyc -r lcov -e .ts -i ts-node/register \
 		--report-dir reports/coverage \
